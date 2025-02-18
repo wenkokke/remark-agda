@@ -17,10 +17,10 @@ import { unified } from "unified";
 
 /**
  * @this {Processor<Root, undefined, undefined, Root, string>}
- * @param {AgdaParameters} options
+ * @param {AgdaParameters} parameters
  * @returns {Transformer<Root, Root>}
  */
-export default function remarkAgda(options) {
+export default function remarkAgda(parameters) {
   const _remark = this;
   const _rehype = unified().use(rehypeParse, { fragment: true });
 
@@ -46,7 +46,7 @@ export default function remarkAgda(options) {
     if (sourceFile.endsWith(".lagda.md")) {
       // ...compile the source file with Agda:
       const defaultHtmlDir = "html";
-      const { htmlDir, flags, execaOptions } = options ?? {};
+      const { htmlDir, flags, execaOptions } = parameters ?? {};
       await execa(
         "agda",
         [
