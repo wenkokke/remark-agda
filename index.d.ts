@@ -1,16 +1,14 @@
 declare module "remark-agda" {
   import type { SyncOptions } from "execa";
   import type { Root } from "mdast";
-  import type { Processor, Transformer } from "unified";
+  import type { Plugin } from "unified";
 
   export type AgdaParameters = {
     htmlDir?: string;
-    flags?: string[];
-    execaOptions?: SyncOptions;
+    args?: string[];
+    options?: SyncOptions;
   };
 
-  export default function remarkAgda(
-    this: Processor<Root, undefined, undefined, Root, string>,
-    parameters: AgdaParameters
-  ): Transformer<Root, Root>;
+  const remarkAgda: Plugin<[AgdaParameters], Root>;
+  export default remarkAgda;
 }

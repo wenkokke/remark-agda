@@ -3,7 +3,7 @@
  * @import { Root } from 'mdast'
  * @import { Processor , Transformer} from 'unified'
  * @import { VFile } from 'vfile'
- * @typedef {{htmlDir?: string; flags?: string[]; execaOptions?: SyncOptions}} AgdaParameters
+ * @typedef { {htmlDir?: string; args?: string[]; options?: SyncOptions} } AgdaParameters
  */
 
 import { execa } from "execa";
@@ -46,25 +46,34 @@ export default function remarkAgda(parameters) {
     if (sourceFile.endsWith(".lagda.md")) {
       // ...compile the source file with Agda:
       const defaultHtmlDir = "html";
-      const { htmlDir, flags, execaOptions } = parameters ?? {};
+      const { htmlDir, args, options } = parameters ?? {};
       await execa(
         "agda",
         [
           "--html",
           `--html-dir=${htmlDir ?? defaultHtmlDir}`,
           "--html-highlight=code",
-          ...(flags ?? []),
+          ...(args ?? []),
           sourceFile,
         ],
-        execaOptions
+        options
       );
       // ...parse the highlighted Agda file:
       const sourceFileName = path.basename(sourceFile, ".lagda.md") + ".md";
-      const highlightedSourceFile = path.join(htmlDir ?? defaultHtmlDir, sourceFileName);
-      const highlightedSourceData = await fs.readFile(highlightedSourceFile, "utf-8");
+      const highlightedSourceFile = path.join(
+        htmlDir ?? defaultHtmlDir,
+        sourceFileName
+      );
+      const highlightedSourceData = await fs.readFile(
+        highlightedSourceFile,
+        "utf-8"
+      );
       const highlightedSourceTree = _remark.parse(highlightedSourceData);
       // ...extract the highlighted Agda code blocks from the highlighted file:
-      const highlightedCodeBlocks = selectAll("html", highlightedSourceTree).filter(
+      const highlightedCodeBlocks = selectAll(
+        "html",
+        highlightedSourceTree
+      ).filter(
         // TODO: modify 'href' attributes to (1) redirect references to local
         //       files to the appropriate route, and (2) redirect references
         //       to the standard library to the appropriate online reference
@@ -85,7 +94,9 @@ export default function remarkAgda(parameters) {
       // Replace the code blocks in the tree with the highlighted code blocks:
       const highlightedTree = map(tree, (node) => {
         if (node.type === "code" && node.lang === "agda") {
-          const nodeIndex = codeBlocks.findIndex(codeBlock => Object.is(codeBlock, node));
+          const nodeIndex = codeBlocks.findIndex((codeBlock) =>
+            Object.is(codeBlock, node)
+          );
           assert.notEqual(nodeIndex, -1);
           return highlightedCodeBlocks[nodeIndex];
         } else {
@@ -93,7 +104,7 @@ export default function remarkAgda(parameters) {
         }
       });
       // Update the basename to drop the 'lagda' extension:
-      vfile.basename = path.basename(vfile.basename, ".lagda.md") + ".md"
+      vfile.basename = path.basename(vfile.basename, ".lagda.md") + ".md";
       return highlightedTree;
     }
     return;
