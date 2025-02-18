@@ -1,8 +1,9 @@
 /**
- * @import {Root} from 'mdast'
- * @import {Processor, Transformer} from 'unified'
- * @import {VFile} from 'vfile'
- * @import {AgdaParameters} from "./index.d.ts"
+ * @import { SyncOptions } from 'execa'
+ * @import { Root } from 'mdast'
+ * @import { Processor , Transformer} from 'unified'
+ * @import { VFile } from 'vfile'
+ * @typedef {{htmlDir?: string; flags?: string[]; execaOptions?: SyncOptions}} AgdaParameters
  */
 
 import { execa } from "execa";
@@ -12,7 +13,6 @@ import * as assert from "assert";
 import { selectAll } from "unist-util-select";
 import rehypeParse from "rehype-parse";
 import * as path from "path";
-import { remark } from "remark";
 import { unified } from "unified";
 
 /**
