@@ -1,0 +1,24 @@
+{
+  "name": "remark-agda",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node index.test.js"
+  },
+  "keywords": [
+    "remark",
+    "remark-plugin",
+    "agda"
+  ],
+  "author": "Wen Kokke",
+  "license": "AGPL-3.0-only",
+  "description": "",
+  "dependencies": {
+    "execa": "^9.5.2",
+    "rehype-parse": "^9.0.1",
+    "remark": "^15.0.1",
+    "unist-util-map": "^4.0.0",
+    "unist-util-select": "^5.1.0"
+  }
+}
