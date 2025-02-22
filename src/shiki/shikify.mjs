@@ -75,8 +75,6 @@ function shikifyNode(node, themes, agdaClassesToTextMateScopes) {
       children: node.children,
     };
     node.children = [code];
-    // ...add the data-language property
-    node.properties["data-language"] = "agda";
     // ...add the astro-code classes to the node:
     if (!Array.isArray(node.properties?.className)) {
       node.properties.className = [];
@@ -93,6 +91,11 @@ function shikifyNode(node, themes, agdaClassesToTextMateScopes) {
     }
     // ...highlight the node:
     node = highlightNodeWithThemes(node, scopeStack, mainTheme, altThemes);
+    // ...add remaining properties:
+    if (node.properties.style === undefined) node.properties.style = ""
+    node.properties.style += "overflow-x:auto;"
+    node.properties.tabindex = 0;
+    node.properties["data-language"] = "agda";
   }
   // If the node is an <a> tag:
   if (node?.tagName === "a") {
