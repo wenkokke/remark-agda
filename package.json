@@ -1,10 +1,10 @@
 {
   "name": "remark-agda",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./src/index.mjs",
   "type": "module",
   "scripts": {
-    "test": "node index.test.js"
+    "test": "node index.test.mjs"
   },
   "keywords": [
     "remark",
@@ -17,8 +17,17 @@
   "dependencies": {
     "execa": "^9.5.2",
     "rehype-parse": "^9.0.1",
+    "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
     "unist-util-map": "^4.0.0",
     "unist-util-select": "^5.1.0"
+  },
+  "peerDependencies": {
+    "shiki": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "shiki": {
+      "optional": true
+    }
   }
 }

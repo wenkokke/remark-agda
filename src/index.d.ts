@@ -4,6 +4,8 @@ declare module "remark-agda" {
   import type { Plugin } from "unified";
 
   export type AgdaParameters = {
+    agdaStdlibBaseUrl?: string;
+    agdaClassesToTextMateScopes?: Partial<Record<string, string[]>>
     htmlDir?: string;
     args?: string[];
     options?: SyncOptions;

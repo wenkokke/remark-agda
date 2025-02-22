@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import { remark } from "remark";
-import remarkAgda from "./index.js";
+import remarkAgda from "./src/index.js";
 import { VFile } from "vfile";
 
 const sourcePath = "input.lagda.md";
