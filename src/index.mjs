@@ -51,27 +51,25 @@ export default function remarkAgda(parameters) {
     );
     // If the source file is a .lagda.md file...
     if (sourceFile.endsWith(".lagda.md")) {
+      // ...find the Agda module name:
+      const moduleName = findAgdaModuleName(sourceCodeBlocks);
       // ...compile the source file with Agda:
       const defaultHtmlDir = "html";
       const { htmlDir, args, options } = parameters ?? {};
+      const outputDir = path.join(htmlDir ?? defaultHtmlDir, moduleName);
       await execa(
         "agda",
         [
           "--html",
-          `--html-dir=${htmlDir ?? defaultHtmlDir}`,
+          `--html-dir=${outputDir}`,
           "--html-highlight=code",
           ...(args ?? []),
           sourceFile,
         ],
         options
       );
-      // ...find the Agda module name:
-      const moduleName = findAgdaModuleName(sourceCodeBlocks);
       // ...parse the highlighted Agda file:
-      const highlightedSourceFile = path.join(
-        htmlDir ?? defaultHtmlDir,
-        moduleName + ".md"
-      );
+      const highlightedSourceFile = path.join(outputDir, moduleName + ".md");
       const highlightedSourceData = await fs.readFile(
         highlightedSourceFile,
         "utf-8"
