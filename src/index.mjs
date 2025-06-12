@@ -53,6 +53,9 @@ export default function remarkAgda(parameters) {
     if (sourceFile.endsWith(".lagda.md")) {
       // ...find the Agda module name:
       const moduleName = findAgdaModuleName(sourceCodeBlocks);
+      if (moduleName === null) {
+        vfile.fail("Could not find module name.");
+      }
       // ...compile the source file with Agda:
       const defaultHtmlDir = "html";
       const { htmlDir, args, options } = parameters ?? {};
