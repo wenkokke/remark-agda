@@ -1,7 +1,7 @@
 /**
  * @import { SyncOptions } from 'execa'
  * @import { Root } from 'mdast'
- * @import { Processor , Transformer} from 'unified'
+ * @import { Processor , Transformer } from 'unified'
  * @import { VFile } from 'vfile'
  * @typedef { {agdaStdlibBaseUrl?: string; agdaClassesToTextMateScopes?: Partial<Record<string, string[]>>; htmlDir?: string; args?: string[]; options?: SyncOptions} } AgdaParameters
  */
@@ -15,9 +15,7 @@ import rehypeParse from "rehype-parse";
 import rehypeStringify from "rehype-stringify";
 import * as path from "path";
 import { unified } from "unified";
-import shikify from "./shiki/shikify.mjs";
-import findShikiConfig from "./shiki/findShikiConfig.mjs";
-import loadShikiThemes from "./shiki/loadShikiThemes.mjs";
+import prismify from "./prism/prismify.mjs"
 
 /**
  * @this {Processor<Root, undefined, undefined, Root, string>}
@@ -29,7 +27,6 @@ export default function remarkAgda(parameters) {
   const _rehypeParse = unified().use(rehypeParse, { fragment: true });
   const _rehypeStringify = unified().use(rehypeStringify, { fragment: true });
   const _agdaPrimModuleUrlPathRegExp = createAgdaPrimModuleUrlPathRegExp();
-  const _shikiThemes = loadShikiThemes(findShikiConfig.bind(this)());
 
   /**
    * @param {Root} tree
@@ -78,8 +75,6 @@ export default function remarkAgda(parameters) {
         "utf-8"
       );
       const highlightedSourceTree = _remark.parse(highlightedSourceData);
-      // ...await the loading Shiki themes:
-      const shikiThemes = await _shikiThemes;
       // ...find the regular expression that matches all links to primitive modules:
       const agdaPrimModuleUrlPathRegExp = await _agdaPrimModuleUrlPathRegExp;
       const agdaThisModuleUrlPathRegExp = new RegExp(`^${moduleName}\\.html`);
@@ -132,8 +127,8 @@ export default function remarkAgda(parameters) {
           })
         )
         .map((root) =>
-          // ...change highlighting classes to match Shiki:
-          shikify(root, shikiThemes, parameters.agdaClassesToTextMateScopes)
+          // ...change highlighting classes to match PrismJS:
+          prismify(root)
         )
         .map(
           // ...stringify the highlighted Agda code blocks:
